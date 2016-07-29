@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="CoNWeT" name="widget-global-instances" version="0.1.0">
+<details>
+  <title>Global Instances</title>
+  <homepage>https://github.com/rockneurotiko/widget-global-instances</homepage>
+  <authors>Miguel</authors>
+  <email>mgarcia@conwet.com</email>
+  <image></image>
+  <smartphoneimage></smartphoneimage>
+  <description>Show Global Instances Status</description>
+  <longdescription>DESCRIPTION.md</longdescription>
+  <changelog>doc/changelog.md</changelog>
+  <doc>doc/index.md</doc>
+  <license>MIT</license>
+  <issuetracker>https://github.com/rockneurotiko/widget-global-instances/issues</issuetracker>
+</details>
+
+<requirements>
+  
+</requirements>
+
+<preferences>
+</preferences>
+<wiring>
+</wiring>
+<contents src="index.html"/>
+<rendering height="47" width="10"/>
+</widget>

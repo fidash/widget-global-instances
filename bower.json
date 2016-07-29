@@ -1,0 +1,17 @@
+{
+    "name": "widget-global-instances",
+    "dependencies": {
+        "jquery": null,
+        "material-design-lite": "~1.1.3"
+    },
+    "devDependencies": {},
+    "exportsOverride": {
+        "jquery": {
+            "js": "dist/jquery.min.js"
+        },
+        "material-design-lite": {
+            "js": "material.min.js",
+            "css": "material.min.css"
+        }
+    }
+}
