@@ -61,55 +61,61 @@ var WidgetGlobalInstances = (function () {
      **************************PRIVATE*************************
      *********************************************************/
 
-    var createCard = function createCard(id, code, reason) {
-        var $out = $("<div></div>", {
-            id: id.replace(/(\.|:)/g, "_"),
-            class: "status-card mdl-card mdl-shadow--2dp " + ((reason === "OK") ? "ok" : "nook")
-        });
+    var createServiceCard = function createCard(host, service, status, code, reason) {
 
-        var $inner = $("<div></div>", {
-            class: "center-text mdl-card__title mdl-card--expand"
-        });
-
-        var host = id.split(":")[1];
-        var serv = id.split(":")[2];
-
-        var $h4 = $("<h4></h4>", {
-            text: host + " -> " + serv
-        });
-
-        $h4.appendTo($inner);
-        $inner.appendTo($out);
         var $main = $("#main");
-        $out.appendTo($main);
+        var hostDOM = document.getElementById(host);
+        var $host = hostDOM ? $(hostDOM) : null;
+        var servicesContainer = document.getElementById(host + "-services");
+        var $servicesContainer = servicesContainer ? $(servicesContainer) : null;
 
-        var $divs = $main.children("div");
-        $divs.sort(function (a, b) {
-            var at = a.textContent;
-            var bt = b.textContent;
+        if (!$host) {
+            $host = $("<div></div>", {
+                'id': host,
+                'class': "host"
+            }).append($("<div></div>", {
+                'text': host,
+                'class': "host-name"
+            }));
+            $servicesContainer = $("<div></div>", {
+                'id': host + "-services",
+                'class': "services-container"
+            });
+            $servicesContainer.appendTo($host);
+            $host.appendTo($main);
+        }
 
-            var ah = at.split("->")[0].trim();
-            var as = at.split("->")[1].trim();
+        var $service = $("<div></div>" , {
+            'id': host + ":" + service,
+            'class': "service",
+            'data-toggle': "tooltip",
+            'title': service + ": " + "status " + status + ", code" + code + ": " + reason
+        }). append($("<div></div>", {
+            'class': "service-name",
+            'text': service
+        }));
 
-            var bh = bt.split("->")[0];
-            var bs = bt.split("->")[1];
+        $servicesContainer.append($service);
 
-            if (ah > bh) {
-                return 1;
-            }
-            if (ah < bh) {
-                return -1;
-            }
-            if (as > bs) {
-                return 1;
-            }
-            if (as < bs) {
-                return -1;
-            }
-            return 0;
+        // Add service status
+        $service.append($("<label></label>", {
+            'text': ((status === "") ? "--" : status)
+        }));
+
+        // Sort services
+        var $services = $servicesContainer.children("div");
+        $services.sort(function (a, b) {
+            return a.id < b.id;
+        });
+        $services.detach().appendTo($servicesContainer);
+
+        // Sort hosts
+        var $hosts = $main.children("div");
+        $hosts.sort(function (a, b) {
+            return a.id < b.id;
         });
 
-        $divs.detach().appendTo($main);
+        $hosts.detach().appendTo($main);
     };
 
 
@@ -148,11 +154,10 @@ var WidgetGlobalInstances = (function () {
                     return;
                 }
 
-                var id = statusData.contextElement.id;
                 var code = statusData.statusCode.code;
                 var reason = statusData.statusCode.reasonPhrase;
-                createCard(id, code, reason);
-                // window.console.log(id, code, reason);
+
+                createServiceCard(host, service, status, code, reason);
             },
             onFailure: function (response) {
                 window.console.log(response);
@@ -178,11 +183,6 @@ var WidgetGlobalInstances = (function () {
     /************AUXILIAR FUNCTIONS**********/
     /****************************************/
 
-    /* test-code */
-    WidgetGlobalInstances.prototype = {
-    };
-
-    /* end-test-code */
 
     return WidgetGlobalInstances;
 
