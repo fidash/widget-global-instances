@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="CoNWeT" name="widget-global-instances" version="0.2.1">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="UPM-ETSIINF" name="widget-global-instances" version="0.2.2">
 <details>
   <title>Global Instances</title>
   <homepage>https://github.com/rockneurotiko/widget-global-instances</homepage>
