@@ -150,15 +150,21 @@ var WidgetGlobalInstances = (function () {
                 var service;
                 var code;
                 var reason;
+                var serviceStatusObj;
+                var serviceStatus;
 
                 for (var i in data.contextResponses) {
                     hostData = data.contextResponses[i];
                     hostId = hostData.contextElement.id.split(":");
                     host = hostId[1];
                     service = hostId[2];
+                    serviceStatusObj = $.grep(hostData.contextElement.attributes, function (e) {
+                        return e.name === "status";
+                    });
+                    serviceStatus = (serviceStatusObj && serviceStatusObj.length > 0) ? serviceStatusObj[0].value : "MISSING";
                     code = hostData.statusCode.code;
                     reason = hostData.statusCode.reasonPhrase;
-                    createServiceCard(host, service, status, code, reason);
+                    createServiceCard(host, service, serviceStatus, code, reason);
                 }
             },
             onFailure: function (response) {
@@ -178,7 +184,6 @@ var WidgetGlobalInstances = (function () {
     /****************************************/
     /************AUXILIAR FUNCTIONS**********/
     /****************************************/
-
 
     return WidgetGlobalInstances;
 
