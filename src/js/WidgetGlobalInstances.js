@@ -19,7 +19,7 @@ var WidgetGlobalInstances = (function () {
      *********************************************************/
     var url = "http://nagios.lab.fiware.org/orion/v1/queryContext";
 
-    var servs = {
+    /*var servs = {
         "cep.lab.fiware.org": ["http_api"],
         "chef-server.lab.fiware.org": ["http_web"],
         "cosmos.lab.fiware.org": ["http_fs", "https_web"],
@@ -39,7 +39,7 @@ var WidgetGlobalInstances = (function () {
         "rss.lab.fiware.org": ["http_web"],
         "saggita.lab.fiware.org": ["https_api"],
         "store.lab.fiware.org": ["http_web", "https_web"]
-    };
+    };*/
 
 
     /*********************************************************
@@ -68,6 +68,7 @@ var WidgetGlobalInstances = (function () {
         var $host = hostDOM ? $(hostDOM) : null;
         var servicesContainer = document.getElementById(host + "-services");
         var $servicesContainer = servicesContainer ? $(servicesContainer) : null;
+        var statusText = ((status === "") ? "MISSING" : status); // OK, CRITICAL, WARNING, UNKNOWN
 
         if (!$host) {
             $host = $("<div></div>", {
@@ -99,7 +100,8 @@ var WidgetGlobalInstances = (function () {
 
         // Add service status
         $service.append($("<label></label>", {
-            'text': ((status === "") ? "--" : status)
+            'text': statusText,
+            'class': statusText.toLowerCase()
         }));
 
         // Sort services
@@ -120,12 +122,12 @@ var WidgetGlobalInstances = (function () {
 
 
     var getStatus = function getStatus(host, service) {
-        var labname = "lab:" + host + ":" + service;
+        //var labname = "lab:" + host + ":" + service;
         var data = {
             entities: [{
                 "type": "ge",
                 "isPattern": "true",
-                "id": labname
+                "id": "lab:.*"
             }]
         };
 
@@ -142,22 +144,22 @@ var WidgetGlobalInstances = (function () {
                     return;
                 }
 
-                var statusData;
+                var hostData;
+                var hostId;
+                var host;
+                var service;
+                var code;
+                var reason;
+
                 for (var i in data.contextResponses) {
-                    var resp = data.contextResponses[i];
-                    if (resp.contextElement.id === labname) {
-                        statusData = resp;
-                        break;
-                    }
+                    hostData = data.contextResponses[i];
+                    hostId = hostData.contextElement.id.split(":");
+                    host = hostId[1];
+                    service = hostId[2];
+                    code = hostData.statusCode.code;
+                    reason = hostData.statusCode.reasonPhrase;
+                    createServiceCard(host, service, status, code, reason);
                 }
-                if (!statusData) {
-                    return;
-                }
-
-                var code = statusData.statusCode.code;
-                var reason = statusData.statusCode.reasonPhrase;
-
-                createServiceCard(host, service, status, code, reason);
             },
             onFailure: function (response) {
                 window.console.log(response);
@@ -169,13 +171,7 @@ var WidgetGlobalInstances = (function () {
 
 
     var init = function init() {
-        var keys = Object.keys(servs);
-        for (var keyi in keys) {
-            var key = keys[keyi];
-            for (var namei in servs[key]) {
-                getStatus(key, servs[key][namei]);
-            }
-        }
+        getStatus();
     };
 
 
