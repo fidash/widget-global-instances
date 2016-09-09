@@ -61,7 +61,7 @@ var WidgetGlobalInstances = (function () {
      **************************PRIVATE*************************
      *********************************************************/
 
-    var createServiceCard = function createCard(host, service, status, code, reason) {
+    var createServiceCard = function createCard(host, service, status) {
 
         var $main = $("#main");
         var hostDOM = document.getElementById(host);
@@ -89,8 +89,7 @@ var WidgetGlobalInstances = (function () {
         var $service = $("<div></div>" , {
             'id': host + ":" + service,
             'class': "service",
-            'data-toggle': "tooltip",
-            'title': service + ": " + "status " + status + ", code" + code + ": " + reason
+            'data-toggle': "tooltip"
         }). append($("<div></div>", {
             'class': "service-name",
             'text': service
@@ -148,8 +147,8 @@ var WidgetGlobalInstances = (function () {
                 var hostId;
                 var host;
                 var service;
-                var code;
-                var reason;
+                //var code;
+                //var reason;
                 var serviceStatusObj;
                 var serviceStatus;
 
@@ -162,9 +161,9 @@ var WidgetGlobalInstances = (function () {
                         return e.name === "status";
                     });
                     serviceStatus = (serviceStatusObj && serviceStatusObj.length > 0) ? serviceStatusObj[0].value : "MISSING";
-                    code = hostData.statusCode.code;
-                    reason = hostData.statusCode.reasonPhrase;
-                    createServiceCard(host, service, serviceStatus, code, reason);
+                    //code = hostData.statusCode.code;
+                    //reason = hostData.statusCode.reasonPhrase;
+                    createServiceCard(host, service, serviceStatus);
                 }
             },
             onFailure: function (response) {
